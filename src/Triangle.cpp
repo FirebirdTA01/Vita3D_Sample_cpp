@@ -82,7 +82,7 @@ Triangle::~Triangle()
 
 void Triangle::init()
 {
-	EMPrintf("\nInitializing a triangle object\n");
+	vitaPrintf("\nInitializing a triangle object\n");
 	int error = 0;
 
 	//register the programs with the patcher that were compiled and linked to using the CG tool
@@ -147,7 +147,7 @@ void Triangle::init()
 	);
 
 	//The memory for all of these was allocated before the constructor 
-	EMPrintf("Setting up clear vertices\n");
+	vitaPrintf("Setting up clear vertices\n");
 	//create clear triangle vertices/indice
 	clearVertices[0].x = -1.0f;
 	clearVertices[0].y = -1.0f;
@@ -156,12 +156,12 @@ void Triangle::init()
 	clearVertices[2].x = -1.0f;
 	clearVertices[2].y = 3.0f;
 
-	EMPrintf("Setting up clear indices\n");
+	vitaPrintf("Setting up clear indices\n");
 	clearIndices[0] = 0;
 	clearIndices[1] = 1;
 	clearIndices[2] = 2;
 
-	EMPrintf("Setting up basic vertices\n");
+	vitaPrintf("Setting up basic vertices\n");
 	//create basic shaded triangle vetices/indice
 	basicVertices[0].x = -0.5f;
 	basicVertices[0].y = -0.5f;
@@ -176,14 +176,14 @@ void Triangle::init()
 	basicVertices[2].z = 0.0f;
 	basicVertices[2].color = 0xffff0000;
 
-	EMPrintf("Setting up basic indices\n");
+	vitaPrintf("Setting up basic indices\n");
 	basicIndices[0] = 0;
 	basicIndices[1] = 1;
 	basicIndices[2] = 2;
 
 	//Just to get something working real quick... this is suppossed to be const correct, but I'll fix that later
 	//for now just do const_cast when using this
-	EMPrintf("Loading World-View-Projection parameters from vertex program at address: %p\n", basicVertexProgram_ptr);
+	vitaPrintf("Loading World-View-Projection parameters from vertex program at address: %p\n", basicVertexProgram_ptr);
 	const SceGxmProgramParameter* wvpParam_ptr = sceGxmProgramFindParameterByName(sceGxmShaderPatcherGetProgramFromId(basicVertexProgramID), "wvp");
 	assert(wvpParam_ptr && (sceGxmProgramParameterGetCategory(wvpParam_ptr) == SCE_GXM_PARAMETER_CATEGORY_UNIFORM));
 	_wvpParams.insert(_wvpParams.begin(), std::make_pair("wvp", wvpParam_ptr));
@@ -226,7 +226,7 @@ void Triangle::update()
 
 void Triangle::cleanup()
 {	
-	EMPrintf("\nCleaning up after a triangle object\n");
+	vitaPrintf("\nCleaning up after a triangle object\n");
 
 	/* This is done automatically in Graphics::shutdown()
 	Graphics::getInstance()->patcherUnregisterProgram(basicFragmentProgramID);

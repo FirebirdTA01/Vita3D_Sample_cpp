@@ -102,12 +102,12 @@ void Graphics::initGraphics()
 
 	if (initialized)
 	{
-		EMPrintf("Graphics System is already initialized!\n");
+		vitaPrintf("Graphics System is already initialized!\n");
 		return;
 	}
 
 	//Start by initializing libgxm
-	EMPrintf("Initializing graphics system\n");
+	vitaPrintf("Initializing graphics system\n");
 	//set up the parameters
 	SceGxmInitializeParams gxmInitParams;
 	memset(&gxmInitParams, 0, sizeof(SceGxmInitializeParams));
@@ -118,9 +118,9 @@ void Graphics::initGraphics()
 	gxmInitParams.parameterBufferSize			= SCE_GXM_DEFAULT_PARAMETER_BUFFER_SIZE; //use default parameter buffer size (16MB)
 
 	//now try initializing with those parameters
-	EMPrintf("Initializing SCE GXM\n");
+	vitaPrintf("Initializing SCE GXM\n");
 	error = sceGxmInitialize(&gxmInitParams);
-	EMPrintf("sceGxmInitialize() result: 0x%08X\n", error);
+	vitaPrintf("sceGxmInitialize() result: 0x%08X\n", error);
 	assert(error == 0);
 	//{
 		//TO DO: use Logger to log the error and then close its output stream
@@ -132,9 +132,9 @@ void Graphics::initGraphics()
 	//This rendering context is what allows us to render scenes on the GPU
 	//start by allocating default ringBuf memory sizes
 	//----------------------------------------------------------------------------------
-	EMPrintf("Setting up ring buffers...\n");
+	vitaPrintf("Setting up ring buffers...\n");
 	//vdm
-	EMPrintf("\nAllocating memory for the VDM ring buffer...\n");
+	vitaPrintf("\nAllocating memory for the VDM ring buffer...\n");
 	vdmRingBuf_ptr = allocGraphicsMem(
 		SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE,
 		SCE_GXM_DEFAULT_VDM_RING_BUFFER_SIZE,
@@ -143,7 +143,7 @@ void Graphics::initGraphics()
 		&vdmRingBufUID
 	);
 	//vertex
-	EMPrintf("\nAllocating memory for the vertex ring buffer...\n");
+	vitaPrintf("\nAllocating memory for the vertex ring buffer...\n");
 	vertexRingBuf_ptr = allocGraphicsMem(
 		SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE,
 		SCE_GXM_DEFAULT_VERTEX_RING_BUFFER_SIZE,
@@ -152,7 +152,7 @@ void Graphics::initGraphics()
 		&vertexRingBufUID
 	);
 	//fragment
-	EMPrintf("\nAllocating memory for the fragment ring buffer...\n");
+	vitaPrintf("\nAllocating memory for the fragment ring buffer...\n");
 	fragmentRingBuf_ptr = allocGraphicsMem(
 		SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE,
 		SCE_GXM_DEFAULT_FRAGMENT_RING_BUFFER_SIZE,
@@ -161,21 +161,21 @@ void Graphics::initGraphics()
 		&fragmentRingBufUID
 	);
 	//fragment USSE
-	EMPrintf("\nAllocating memory for the fragment USSE ring buffer...\n");
+	vitaPrintf("\nAllocating memory for the fragment USSE ring buffer...\n");
 	fragmentUsseRingBuf_ptr = allocFragmentUsseMem(
 		SCE_GXM_DEFAULT_FRAGMENT_USSE_RING_BUFFER_SIZE,
 		&fragmentUsseRingBufUID,
 		&fragmentUsseRingBufOffset
 	);
 	//vertex USSE
-	/*EMPrintf("\nAllocating memory for the vertex USSE ring buffer...\n");
+	/*vitaPrintf("\nAllocating memory for the vertex USSE ring buffer...\n");
 	vertexUsseRingBuf_ptr = allocVertexUsseMem(
 		SCE_GXM_DEFAULT_VERTEX_USSE_RING_BUFFER_SIZE,
 		&vertexUsseRingBufUID,
 		&vertexUsseRingBufOffset
 	);*/
 
-	EMPrintf("\nSetting libgmx render context parameters - Using defaults\n");
+	vitaPrintf("\nSetting libgmx render context parameters - Using defaults\n");
 	//now we set the libgxm render context parameters
 	memset(&gxmContextParams, 0, sizeof(SceGxmContextParams));
 	gxmContextParams.hostMem						= malloc(SCE_GXM_MINIMUM_CONTEXT_HOST_MEM_SIZE);
@@ -191,9 +191,9 @@ void Graphics::initGraphics()
 	gxmContextParams.fragmentUsseRingBufferOffset	= fragmentUsseRingBufOffset;
 
 	//and now we FINALLY create the gxm render context we were talking about around 50 lines up
-	EMPrintf("Creating GXM context\n");
+	vitaPrintf("Creating GXM context\n");
 	error = sceGxmCreateContext(&gxmContextParams, &gxmContext_ptr);
-	EMPrintf("sceGxmCreateContext() result: 0x%08X\n", error);
+	vitaPrintf("sceGxmCreateContext() result: 0x%08X\n", error);
 	assert(error == 0);
 
 	//---------------------------------------------------------------------------------------------------
@@ -201,7 +201,7 @@ void Graphics::initGraphics()
 	//be rendering to. The render target is used purely for scheduling render jobs for given dimensions.
 	//The color surface, as well as the depth and stencil surface must be allocated seperately
 	//--------------------------------------------------------------------------------------------------
-	EMPrintf("\nSetting render target parameters\n");
+	vitaPrintf("\nSetting render target parameters\n");
 	//set up parameters
 	memset(&gxmRenderTargetParams, 0, sizeof(SceGxmRenderTargetParams));
 	gxmRenderTargetParams.flags				= 0;				//Bitwise combined flags from #SceGxmRenderTargetFlags.
@@ -213,9 +213,9 @@ void Graphics::initGraphics()
 	gxmRenderTargetParams.driverMemBlock		= -1;				//The uncached LPDDR memblock for the render target GPU data structures or SCE_UID_INVALID_UID to specify memory should be allocated in libgxm.
 
 	//And actually create the render target
-	EMPrintf("Creating the render target\n");
+	vitaPrintf("Creating the render target\n");
 	error = sceGxmCreateRenderTarget(&gxmRenderTargetParams, &gxmRenderTarget_ptr);
-	EMPrintf("sceGxmCreateRenderTarget() result: 0x%08X\n", error);
+	vitaPrintf("sceGxmCreateRenderTarget() result: 0x%08X\n", error);
 	assert(error == 0);
 
 	//---------------------------------------------------------------------------------------------
@@ -224,11 +224,11 @@ void Graphics::initGraphics()
 	//rendering done by the GPU, we also use SceGxmSyncObjects for each display buffer. This object
 	//is used by each scene that renders to that buffer and that buffer is queued for display flips (whether to or from)
 	//---------------------------------------------------------------------------------------------
-	EMPrintf("\nAllocating display buffers and sync objects...\n");
+	vitaPrintf("\nAllocating display buffers and sync objects...\n");
 	//allocate memory/sync objects for frame buffers
 	for (uint32_t i = 0; i < DISPLAY_BUFFER_COUNT; i++)
 	{
-		EMPrintf("\nWorking on display buffer: %d\n", i);
+		vitaPrintf("\nWorking on display buffer: %d\n", i);
 		//allocate large alignment (1MB) memory to ensure it's physically continuous/not broken
 		_displayBuffers[i] = allocGraphicsMem(
 			SCE_KERNEL_MEMBLOCK_TYPE_USER_CDRAM_RW,
@@ -238,7 +238,7 @@ void Graphics::initGraphics()
 			&_displayBufferUIDs[i]
 		);
 
-		EMPrintf("Setting the buffer to a noticeable color\n");
+		vitaPrintf("Setting the buffer to a noticeable color\n");
 		//set the buffer to a noticeable debug color
 		for (uint32_t j = 0; j < DISPLAY_HEIGHT; j++)
 		{
@@ -248,7 +248,7 @@ void Graphics::initGraphics()
 				row[y] = 0xffff00ff; //TO DO: use bitshift macro and ABGR8 color format instead;
 		}
 
-		EMPrintf("Initializing gxm color surface for this buffer\n");
+		vitaPrintf("Initializing gxm color surface for this buffer\n");
 		//color surface for this display buffer
 		error = sceGxmColorSurfaceInit(
 			&_colorSurfaces[i],
@@ -261,13 +261,13 @@ void Graphics::initGraphics()
 			DISPLAY_STRIDE_IN_PIXELS,
 			_displayBuffers[i]
 		);
-		EMPrintf("sceGxmColorSurfaceInit() result: 0x%08X\n", error);
+		vitaPrintf("sceGxmColorSurfaceInit() result: 0x%08X\n", error);
 		assert(error == 0);
 
 		//create a sync object to be associated with this buffer
-		EMPrintf("Creating a sync object for this buffer\n");
+		vitaPrintf("Creating a sync object for this buffer\n");
 		error = sceGxmSyncObjectCreate(&_displaySyncObjects[i]);
-		EMPrintf("sceGxmSyncObjectCreate() result: 0x%08X\n", error);
+		vitaPrintf("sceGxmSyncObjectCreate() result: 0x%08X\n", error);
 		assert(error == 0);
 	}
 
@@ -285,22 +285,22 @@ void Graphics::initGraphics()
 	uint32_t depthStrideInSamples = alignedWidth;
 	if (MSAA_MODE == SCE_GXM_MULTISAMPLE_4X)
 	{
-		EMPrintf("\nSetting up 4x antialiasing\n");
+		vitaPrintf("\nSetting up 4x antialiasing\n");
 		//increase samples across x and y
 		sampleCount *= 4;
 		depthStrideInSamples *= 2;
 	}
 	else if (MSAA_MODE == SCE_GXM_MULTISAMPLE_2X)
 	{
-		EMPrintf("\nSetting up 2x antialiasing\n");
+		vitaPrintf("\nSetting up 2x antialiasing\n");
 		//increase samples across Y only
 		sampleCount *= 2;
 	}
 	else
-		EMPrintf("\nNot using antialiasing\n");
+		vitaPrintf("\nNot using antialiasing\n");
 
 	//allocate depth buffer memory
-	EMPrintf("\nCreating the depth-buffer\n");
+	vitaPrintf("\nCreating the depth-buffer\n");
 	depthBuf_ptr = allocGraphicsMem(
 		SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE,
 		sampleCount * 4,
@@ -310,7 +310,7 @@ void Graphics::initGraphics()
 	);
 
 	//set the depth stencil structure
-	EMPrintf("Initializing depth stencil surface\n");
+	vitaPrintf("Initializing depth stencil surface\n");
 	error = sceGxmDepthStencilSurfaceInit(
 		&depthStencilSurface,
 		SCE_GXM_DEPTH_STENCIL_FORMAT_S8D24,
@@ -319,7 +319,7 @@ void Graphics::initGraphics()
 		depthBuf_ptr,
 		NULL
 	);
-	EMPrintf("sceGxmDepthStencilSurfaceInit() result: 0x%08X\n", error);
+	vitaPrintf("sceGxmDepthStencilSurfaceInit() result: 0x%08X\n", error);
 	assert(error == 0);
 
 	//Initialize the shader patcher in its own function
@@ -353,9 +353,9 @@ void Graphics::initShaderPatcher(PatcherSizes* sizes)
 	//programs should only be registered with the shader patcher once if possible. This is where
 	//we do that
 	//------------------------------------------------------------------------------------------
-	EMPrintf("\nSetting up shader patcher\n");
+	vitaPrintf("\nSetting up shader patcher\n");
 	//allocate memory for buffers and USSE code
-	EMPrintf("\nAllocating memory for the shader patcher buffer\n");
+	vitaPrintf("\nAllocating memory for the shader patcher buffer\n");
 	patcherBuf_ptr = allocGraphicsMem(
 		SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE,
 		sizes->patchBufferSize,
@@ -364,21 +364,21 @@ void Graphics::initShaderPatcher(PatcherSizes* sizes)
 		&patcherBufUID
 	);
 
-	EMPrintf("\nAllocating memory for patcher's vertex USSE programs\n");
+	vitaPrintf("\nAllocating memory for patcher's vertex USSE programs\n");
 	patcherVertexUsse_ptr = allocVertexUsseMem(
 		sizes->patchVertexUsseSize,
 		&patcherVertexUsseUID,
 		&patcherVertexUsseOffset
 	);
 
-	EMPrintf("\nAllocating memory for patcher's fragment USSE programs\n");
+	vitaPrintf("\nAllocating memory for patcher's fragment USSE programs\n");
 	patcherFragmentUsse_ptr = allocFragmentUsseMem(
 		sizes->patchFragmentUsseSize,
 		&patcherFragmentUsseUID,
 		&patcherFragmentUsseOffset
 	);
 
-	EMPrintf("\nSetting shader patcher parameters\n");
+	vitaPrintf("\nSetting shader patcher parameters\n");
 	//create a shader patcher
 	memset(&patcherParams, 0, sizeof(SceGxmShaderPatcherParams));
 	patcherParams.userData = NULL;
@@ -399,9 +399,9 @@ void Graphics::initShaderPatcher(PatcherSizes* sizes)
 	patcherParams.fragmentUsseMemSize = sizes->patchFragmentUsseSize;
 	patcherParams.fragmentUsseOffset = patcherFragmentUsseOffset;
 
-	EMPrintf("\nCreating the shader patcher\n");
+	vitaPrintf("\nCreating the shader patcher\n");
 	int error = sceGxmShaderPatcherCreate(&patcherParams, &patcher_ptr);
-	EMPrintf("sceGxmShaderPatcherCreate() result: 0x%08X\n", error);
+	vitaPrintf("sceGxmShaderPatcherCreate() result: 0x%08X\n", error);
 	assert(error == 0);
 }
 
@@ -412,7 +412,7 @@ void Graphics::initShaderPatcher(PatcherSizes* sizes)
 void Graphics::shutdownGraphics()
 {
 	int error = 0;
-	EMPrintf("\nShutting down graphics system\n");
+	vitaPrintf("\nShutting down graphics system\n");
 
 	//wait for the gxm to finish
 	sceGxmFinish(gxmContext_ptr);
@@ -436,7 +436,7 @@ void Graphics::shutdownGraphics()
 	}
 
 	//destroy shader patcher
-	EMPrintf("\nCleaning up shader patcher\n");
+	vitaPrintf("\nCleaning up shader patcher\n");
 	//PROGRAMS MUST BE UNREGISTERED FIRST
 	patcherUnregisterPrograms();
 	sceGxmShaderPatcherDestroy(patcher_ptr);
@@ -445,11 +445,11 @@ void Graphics::shutdownGraphics()
 	freeGraphicsMem(patcherBufUID);
 
 	// destroy the render target
-	EMPrintf("Destroying the render target\n");
+	vitaPrintf("Destroying the render target\n");
 	sceGxmDestroyRenderTarget(gxmRenderTarget_ptr);
 
 	// destroy the context and ring buffers
-	EMPrintf("Destroying the gxm context\n");
+	vitaPrintf("Destroying the gxm context\n");
 	sceGxmDestroyContext(gxmContext_ptr);
 	freeFragmentUsseMem(fragmentUsseRingBufUID);
 	freeGraphicsMem(fragmentRingBufUID);
@@ -458,7 +458,7 @@ void Graphics::shutdownGraphics()
 	free(gxmContextParams.hostMem);
 
 	// terminate libgxm
-	EMPrintf("Terminating the GXM\n");
+	vitaPrintf("Terminating the GXM\n");
 	sceGxmTerminate();
 }
 
@@ -544,14 +544,14 @@ SceGxmShaderPatcherId Graphics::patcherRegisterProgram(const SceGxmProgram *cons
 	int error = 0;
 
 	//check the program
-	EMPrintf("\nChecking shader program\nProgram address: %p\n", programHeader);
+	vitaPrintf("\nChecking shader program\nProgram address: %p\n", programHeader);
 	error = sceGxmProgramCheck(programHeader);
-	EMPrintf("sceGxmProgramCheck() result: 0x%08X\n", error);
+	vitaPrintf("sceGxmProgramCheck() result: 0x%08X\n", error);
 
 	SceGxmShaderPatcherId programID;
-	EMPrintf("Registering shader program with the patcher\n");
+	vitaPrintf("Registering shader program with the patcher\n");
 	error = sceGxmShaderPatcherRegisterProgram(patcher_ptr, programHeader, &programID);
-	EMPrintf("sceGxmShaderPatcherRegisterProgram() result: 0x%08X\n", error);
+	vitaPrintf("sceGxmShaderPatcherRegisterProgram() result: 0x%08X\n", error);
 	//assert(error == 0);
 
 	_registeredPrograms.push_back(programID);
@@ -566,9 +566,9 @@ void Graphics::patcherUnregisterPrograms()
 	std::vector<SceGxmShaderPatcherId>::iterator iter;
 	for (iter = _registeredPrograms.begin(); iter != _registeredPrograms.end(); iter++)
 	{
-		EMPrintf("Unregistering shader program from the patcher\nProgram ID: %d\n", *iter);
+		vitaPrintf("Unregistering shader program from the patcher\nProgram ID: %d\n", *iter);
 		error = sceGxmShaderPatcherUnregisterProgram(patcher_ptr, *iter);
-		EMPrintf("sceGxmShaderPatcherRegisterProgram() result: 0x%08X\n", error);
+		vitaPrintf("sceGxmShaderPatcherRegisterProgram() result: 0x%08X\n", error);
 		//assert(error == 0);
 	}
 }
@@ -577,20 +577,20 @@ void Graphics::patcherUnregisterPrograms()
 //Future usage: patcherSetProgramCreationParams("VertexStreamType", GXM_BASIC_INDEX_16BIT); patcherSetProgramCreationParams("OutputRegFormat", SCE_GXM_OUTPUT_REGISTER_FORMAT_UCHAR4); ect etc
 void Graphics::patcherSetProgramCreationParams(VertexStreamType streamType)
 {
-	EMPrintf("\nProgram creation parameter requested change!\n");
-	EMPrintf("Changing vertex stream type...\n");
+	vitaPrintf("\nProgram creation parameter requested change!\n");
+	vitaPrintf("Changing vertex stream type...\n");
 	//check if a compatible stream already exists
 	std::map<VertexStreamType, const SceGxmVertexStream*>::iterator iter;
 	iter = _vertexStreamMap.find(streamType);
 	if (iter != _vertexStreamMap.end())
 	{
-		EMPrintf("Setting vertex stream to type: %u\n", streamType);
+		vitaPrintf("Setting vertex stream to type: %u\n", streamType);
 		currentStreamType = streamType;
 	}
 	else
 	{
-		EMPrintf("A vertex program requests a vertex stream that doesn't exist yet! Creating one\n");
-		EMPrintf("Vertex stream type: %u\n", streamType);
+		vitaPrintf("A vertex program requests a vertex stream that doesn't exist yet! Creating one\n");
+		vitaPrintf("Vertex stream type: %u\n", streamType);
 		createdStreams++;
 		switch (currentStreamType)
 		{
@@ -627,11 +627,11 @@ void Graphics::patcherSetProgramCreationParams(VertexStreamType streamType)
 			_vertexStreams[createdStreams - 1].indexSource = SCE_GXM_INDEX_SOURCE_INSTANCE_32BIT;
 			break;
 		default:
-			EMPrintf("\nERROR: Unknown vertex stream type!\n");
+			vitaPrintf("\nERROR: Unknown vertex stream type!\n");
 			return;
 		}
 
-		EMPrintf("New stream parameters...\nStride: %u\nIndex source: %u\n", _vertexStreams[createdStreams - 1].stride, _vertexStreams[0].indexSource);
+		vitaPrintf("New stream parameters...\nStride: %u\nIndex source: %u\n", _vertexStreams[createdStreams - 1].stride, _vertexStreams[0].indexSource);
 		currentStreamType = streamType;
 		_vertexStreamMap.insert(iter, std::make_pair(streamType, _vertexStreams));
 	}
@@ -641,7 +641,7 @@ SceGxmVertexProgram* Graphics::patcherCreateVertexProgram(SceGxmShaderPatcherId 
 {
 	int error = 0;
 
-	EMPrintf("\nCreating shader patcher vertex program from program with ID: %u\n", programID);
+	vitaPrintf("\nCreating shader patcher vertex program from program with ID: %u\n", programID);
 	//first get the linked to / registered program
 	const SceGxmProgram *binaryProgram_ptr = sceGxmShaderPatcherGetProgramFromId(programID);
 	assert(binaryProgram_ptr);
@@ -652,12 +652,12 @@ SceGxmVertexProgram* Graphics::patcherCreateVertexProgram(SceGxmShaderPatcherId 
 	for (int i = 0; i < attributeCount; i++)
 	{
 		const char* attributeName = va_arg(vl, const char*);
-		EMPrintf("Adding vertex program attribute: %s\n", attributeName);
+		vitaPrintf("Adding vertex program attribute: %s\n", attributeName);
 		const SceGxmProgramParameter *vertexProgramAttribute_ptr = sceGxmProgramFindParameterByName(binaryProgram_ptr, attributeName);
 		assert(vertexProgramAttribute_ptr && (sceGxmProgramParameterGetCategory(vertexProgramAttribute_ptr) == SCE_GXM_PARAMETER_CATEGORY_ATTRIBUTE));
-		EMPrintf("Setting vertex attribute.regIndex: ");
+		vitaPrintf("Setting vertex attribute.regIndex: ");
 		attributes[i].regIndex = sceGxmProgramParameterGetResourceIndex(vertexProgramAttribute_ptr);
-		EMPrintf("%d\n", attributes[i].regIndex);
+		vitaPrintf("%d\n", attributes[i].regIndex);
 	}
 	va_end(vl);
 
@@ -667,23 +667,23 @@ SceGxmVertexProgram* Graphics::patcherCreateVertexProgram(SceGxmShaderPatcherId 
 	currentStream = _vertexStreamMap.find(currentStreamType);
 	if (currentStream == _vertexStreamMap.end())
 	{
-		EMPrintf("ERROR: Could not find correct vertex stream in _vertexStreams<>!!!\n");
+		vitaPrintf("ERROR: Could not find correct vertex stream in _vertexStreams<>!!!\n");
 		return nullptr;
 	}
 
-	EMPrintf("\nVertex Program and Stream Attributes...\n");
-	EMPrintf("Pointer the the patcher at address: %p\n", patcher_ptr);
-	EMPrintf("ProgramID: %u\n", programID);
-	EMPrintf("Program attributes at address: %p\n", attributes);
-	EMPrintf("\tAttribute - stream index: %u\n", attributes[0].streamIndex);
-	EMPrintf("\tAttribute - offset: %u\n", attributes[0].offset);
-	EMPrintf("\tAttribute - format: 0x%08\n", attributes[0].format);
-	EMPrintf("\tAttribute - component count: %u\n", attributes[0].componentCount);
-	EMPrintf("\tAttribute count: %d\n", attributeCount);
-	EMPrintf("Current vertex stream at address: %p\n", currentStream->second);
-	EMPrintf("\tStream Attribute - stride: %d\n", currentStream->second[createdStreams - 1].stride);
-	EMPrintf("\tStream Attribute - index source: 0x%08\n", currentStream->second[createdStreams - 1].indexSource);
-	EMPrintf("Stream count: %d\n", 1);
+	vitaPrintf("\nVertex Program and Stream Attributes...\n");
+	vitaPrintf("Pointer the the patcher at address: %p\n", patcher_ptr);
+	vitaPrintf("ProgramID: %u\n", programID);
+	vitaPrintf("Program attributes at address: %p\n", attributes);
+	vitaPrintf("\tAttribute - stream index: %u\n", attributes[0].streamIndex);
+	vitaPrintf("\tAttribute - offset: %u\n", attributes[0].offset);
+	vitaPrintf("\tAttribute - format: 0x%08\n", attributes[0].format);
+	vitaPrintf("\tAttribute - component count: %u\n", attributes[0].componentCount);
+	vitaPrintf("\tAttribute count: %d\n", attributeCount);
+	vitaPrintf("Current vertex stream at address: %p\n", currentStream->second);
+	vitaPrintf("\tStream Attribute - stride: %d\n", currentStream->second[createdStreams - 1].stride);
+	vitaPrintf("\tStream Attribute - index source: 0x%08\n", currentStream->second[createdStreams - 1].indexSource);
+	vitaPrintf("Stream count: %d\n", 1);
 
 	SceGxmVertexProgram* vertexProgram_ptr = nullptr;
 	error = sceGxmShaderPatcherCreateVertexProgram(
@@ -695,7 +695,7 @@ SceGxmVertexProgram* Graphics::patcherCreateVertexProgram(SceGxmShaderPatcherId 
 		1,						//TO DO: add support for multiple vertex streams
 		&vertexProgram_ptr
 	);
-	EMPrintf("sceGxmShaderPatcherCreateVertexProgram() result: 0x%08\n", error);
+	vitaPrintf("sceGxmShaderPatcherCreateVertexProgram() result: 0x%08\n", error);
 	assert(error == 0);
 
 	//pushback to vector or map containing loaded programs
@@ -706,16 +706,16 @@ SceGxmVertexProgram* Graphics::patcherCreateVertexProgram(SceGxmShaderPatcherId 
 
 SceGxmFragmentProgram* Graphics::patcherCreateFragmentProgram(SceGxmShaderPatcherId programID, SceGxmShaderPatcherId vertexProgramID)
 {
-	EMPrintf("\nCreating shader patcher fragment program from program with ID: %u\n", programID);
+	vitaPrintf("\nCreating shader patcher fragment program from program with ID: %u\n", programID);
 	
-	EMPrintf("\nFragment Program Attributes...\n");
-	EMPrintf("Pointer the the patcher at address: %p\n", patcher_ptr);
-	EMPrintf("ProgramID: %u\n", programID);
-	EMPrintf("Settings used for program creation:\n");
-	EMPrintf("\tOutput Register Format: 0x%08\n", outputRegisterFormat);
-	EMPrintf("\tAnti-aliasing mode: 0x%08\n", MSAA_MODE);
-	EMPrintf("\tBlend info at address: NOT USED\n");
-	EMPrintf("Using vertex program with ID: %d\n", vertexProgramID);
+	vitaPrintf("\nFragment Program Attributes...\n");
+	vitaPrintf("Pointer the the patcher at address: %p\n", patcher_ptr);
+	vitaPrintf("ProgramID: %u\n", programID);
+	vitaPrintf("Settings used for program creation:\n");
+	vitaPrintf("\tOutput Register Format: 0x%08\n", outputRegisterFormat);
+	vitaPrintf("\tAnti-aliasing mode: 0x%08\n", MSAA_MODE);
+	vitaPrintf("\tBlend info at address: NOT USED\n");
+	vitaPrintf("Using vertex program with ID: %d\n", vertexProgramID);
 
 	SceGxmFragmentProgram* fragmentProgram_ptr;
 	int error = sceGxmShaderPatcherCreateFragmentProgram(
@@ -727,7 +727,7 @@ SceGxmFragmentProgram* Graphics::patcherCreateFragmentProgram(SceGxmShaderPatche
 		sceGxmShaderPatcherGetProgramFromId(vertexProgramID),		//Pointer to the vertex program (The GXP), or null
 		&fragmentProgram_ptr										//Double pointer to storage for fragment program
 	);
-	EMPrintf("sceGxmShaderPatcherCreateVertexProgram() result: 0x%08\n", error);
+	vitaPrintf("sceGxmShaderPatcherCreateVertexProgram() result: 0x%08\n", error);
 	assert(error == 0);
 
 	//pushback to vector containing loaded programs
@@ -806,10 +806,10 @@ void *Graphics::allocGraphicsMem(SceKernelMemBlockType type, SceSize size, uint3
 {
 	int error = 0;
 
-	EMPrintf("Allocating GPU memory...\n");
-	EMPrintf("SceKernelMemBlockType: %d\n", type);
-	EMPrintf("SceSize: %u\n", size);
-	EMPrintf("SceGxmMemoryAttribFlags: %u\n", attributes);
+	vitaPrintf("Allocating GPU memory...\n");
+	vitaPrintf("SceKernelMemBlockType: %d\n", type);
+	vitaPrintf("SceSize: %u\n", size);
+	vitaPrintf("SceGxmMemoryAttribFlags: %u\n", attributes);
 
 	/*	Here we use sceKernelAllocMemBlock directly, this means we cannot directly
 	use the alignment parameter.  Instead, allocate the minimum size for this memblock
@@ -818,18 +818,18 @@ void *Graphics::allocGraphicsMem(SceKernelMemBlockType type, SceSize size, uint3
 	Applications using it's own heap should be able to use the alignment
 	parameter directly for more minimal padding.
 	*/
-	EMPrintf("\nAligning memory... ");
+	vitaPrintf("\nAligning memory... ");
 	if (type == SCE_KERNEL_MEMBLOCK_TYPE_USER_CDRAM_RW)
 	{
 		// CDRAM memblocks must be 256kB aligned
-		EMPrintf("Doing a 256kb alignment\n");
+		vitaPrintf("Doing a 256kb alignment\n");
 		assert(alignment <= 256 * 1024);
 		size = ALIGN_MEM(size, 256 * 1024);
 	}
 	else
 	{
 		//LPDDR memblocks must be 4kB aligned
-		EMPrintf("Doing a 4kb alignment\n");
+		vitaPrintf("Doing a 4kb alignment\n");
 		assert(alignment <= 4 * 1024);
 		size = ALIGN_MEM(size, 4 * 1024);
 	}
@@ -837,7 +837,7 @@ void *Graphics::allocGraphicsMem(SceKernelMemBlockType type, SceSize size, uint3
 
 	//allocate memory
 	*uid = sceKernelAllocMemBlock("gpu_mem", type, size, NULL);
-	EMPrintf("SceUID created: %d\n", *uid);
+	vitaPrintf("SceUID created: %d\n", *uid);
 	assert(*uid >= 0);
 
 	//get the base address
@@ -846,7 +846,7 @@ void *Graphics::allocGraphicsMem(SceKernelMemBlockType type, SceSize size, uint3
 	assert(error == 0);
 
 	//map memory for the GPU
-	EMPrintf("Mapping graphics memory\n");
+	vitaPrintf("Mapping graphics memory\n");
 	error = sceGxmMapMemory(memory, size, attributes);
 	assert(error == 0);
 
@@ -859,7 +859,7 @@ void Graphics::freeGraphicsMem(SceUID uid)
 	int error = 0;
 	UNUSED(error);
 
-	EMPrintf("Freeing allocated gpu memory for SceUID: %d\n", uid);
+	vitaPrintf("Freeing allocated gpu memory for SceUID: %d\n", uid);
 
 	//get the base address
 	void* memory = NULL;
@@ -870,12 +870,12 @@ void Graphics::freeGraphicsMem(SceUID uid)
 
 	//unmap the memory
 	error = sceGxmUnmapMemory(memory);
-	EMPrintf("sceGxmUnmapMemory(%d) result: 0x%08X\n", uid, error);
+	vitaPrintf("sceGxmUnmapMemory(%d) result: 0x%08X\n", uid, error);
 	assert(error == 0);
 
 	//free the memory
 	error = sceKernelFreeMemBlock(uid);
-	EMPrintf("sceKernelFreeMemBlock(%d) result: 0x%08X\n", uid, error);
+	vitaPrintf("sceKernelFreeMemBlock(%d) result: 0x%08X\n", uid, error);
 	assert(error == 0);
 }
 
@@ -885,8 +885,8 @@ void *Graphics::allocVertexUsseMem(SceSize size, SceUID *uid, unsigned int *usse
 	int error = 0;
 	UNUSED(error);
 
-	EMPrintf("Allocating vertex USSE GPU memory...\n");
-	EMPrintf("SceSize: %u\n", size);
+	vitaPrintf("Allocating vertex USSE GPU memory...\n");
+	vitaPrintf("SceSize: %u\n", size);
 
 	//align the memory block for LPDDR (4kb alignment)
 	size = ALIGN_MEM(size, 4096);
@@ -898,15 +898,15 @@ void *Graphics::allocVertexUsseMem(SceSize size, SceUID *uid, unsigned int *usse
 	//get the base address
 	void *memory = NULL;
 	error = sceKernelGetMemBlockBase(*uid, &memory);
-	EMPrintf("sceKernelGetMemBlockBase(%d) result: 0x%08X\n", *uid, error);
+	vitaPrintf("sceKernelGetMemBlockBase(%d) result: 0x%08X\n", *uid, error);
 	//assert(error == 0);
 	if (error < 0)
 		return NULL;
 
 	//map as vertex USSE code for GPU
-	EMPrintf("Mapping memory as vertex USSE code for gpu\n");
+	vitaPrintf("Mapping memory as vertex USSE code for gpu\n");
 	error = sceGxmMapVertexUsseMemory(memory, size, usseOffset);
-	EMPrintf("sceGxmMapVertexUsseMemory(%d) result: 0x%08X\n", *uid, error);
+	vitaPrintf("sceGxmMapVertexUsseMemory(%d) result: 0x%08X\n", *uid, error);
 	//assert(error == 0);
 	if (error < 0)
 		return NULL;
@@ -919,23 +919,23 @@ void Graphics::freeVertexUsseMem(SceUID uid)
 {
 	int error = 0;
 
-	EMPrintf("Freeing allocated vertex USSE gpu memory for SceUID: %d\n", uid);
+	vitaPrintf("Freeing allocated vertex USSE gpu memory for SceUID: %d\n", uid);
 
 	//get base addr
 	void *memory = NULL;
 	error = sceKernelGetMemBlockBase(uid, &memory);
-	EMPrintf("sceKernelGetMemBlockBase(%d) result: 0x%08X\n", uid, error);
+	vitaPrintf("sceKernelGetMemBlockBase(%d) result: 0x%08X\n", uid, error);
 	assert(error == 0);
 
 	//unmap
-	EMPrintf("Unmapping vertex USSE memory\n");
+	vitaPrintf("Unmapping vertex USSE memory\n");
 	error = sceGxmUnmapVertexUsseMemory(memory);
-	EMPrintf("sceGxmUnmapVertexUsseMemory(%d) result: 0x%08X\n", uid, error);
+	vitaPrintf("sceGxmUnmapVertexUsseMemory(%d) result: 0x%08X\n", uid, error);
 	assert(error == 0);
 
 	//free memory
 	error = sceKernelFreeMemBlock(uid);
-	EMPrintf("sceKernelFreeMemBlock(%d) result: 0x%08X\n", uid, error);
+	vitaPrintf("sceKernelFreeMemBlock(%d) result: 0x%08X\n", uid, error);
 	assert(error == 0);
 }
 
@@ -945,8 +945,8 @@ void *Graphics::allocFragmentUsseMem(SceSize size, SceUID *uid, unsigned int *us
 	int error = 0;
 	UNUSED(error);
 
-	EMPrintf("Allocating fragment USSE GPU memory...\n");
-	EMPrintf("SceSize: %u\n", size);
+	vitaPrintf("Allocating fragment USSE GPU memory...\n");
+	vitaPrintf("SceSize: %u\n", size);
 
 	//align the memory block for LPDDR (4kb alignment)
 	size = ALIGN_MEM(size, 4096);
@@ -958,15 +958,15 @@ void *Graphics::allocFragmentUsseMem(SceSize size, SceUID *uid, unsigned int *us
 	//get the base address
 	void *memory = NULL;
 	error = sceKernelGetMemBlockBase(*uid, &memory);
-	EMPrintf("sceKernelGetMemBlockBase(%d) result: 0x%08X\n", *uid, error);
+	vitaPrintf("sceKernelGetMemBlockBase(%d) result: 0x%08X\n", *uid, error);
 	//assert(error == 0);
 	if (error < 0)
 		return NULL;
 
 	//map as fragment USSE code for GPU
-	EMPrintf("Mapping memory as fragment USSE code for gpu\n");
+	vitaPrintf("Mapping memory as fragment USSE code for gpu\n");
 	error = sceGxmMapFragmentUsseMemory(memory, size, usseOffset);
-	EMPrintf("sceGxmMapFragmentUsseMemory(%d) result: 0x%08X\n", *uid, error);
+	vitaPrintf("sceGxmMapFragmentUsseMemory(%d) result: 0x%08X\n", *uid, error);
 	//assert(error == 0);
 	if (error < 0)
 		return NULL;
@@ -980,25 +980,25 @@ void Graphics::freeFragmentUsseMem(SceUID uid)
 	int error = 0;
 	UNUSED(error);
 
-	EMPrintf("Freeing allocated fragment USSE gpu memory for SceUID: %d\n", uid);
+	vitaPrintf("Freeing allocated fragment USSE gpu memory for SceUID: %d\n", uid);
 
 	//get base addr
 	void *memory = NULL;
 	error = sceKernelGetMemBlockBase(uid, &memory);
-	EMPrintf("sceKernelGetMemBlockBase(%d) result: 0x%08X\n", uid, error);
+	vitaPrintf("sceKernelGetMemBlockBase(%d) result: 0x%08X\n", uid, error);
 	//assert(error == 0);
 	if (error < 0)
 		return;
 
 	//unmap
-	EMPrintf("Unmapping fragment USSE memory\n");
+	vitaPrintf("Unmapping fragment USSE memory\n");
 	error = sceGxmUnmapFragmentUsseMemory(memory);
-	EMPrintf("sceGxmUnmapFragmentUsseMemory(%d) result: 0x%08X\n", uid, error);
+	vitaPrintf("sceGxmUnmapFragmentUsseMemory(%d) result: 0x%08X\n", uid, error);
 	assert(error == 0);
 
 	//free
 	error = sceKernelFreeMemBlock(uid);
-	EMPrintf("sceKernelFreeMemBlock(%d) result: 0x%08X\n", uid, error);
+	vitaPrintf("sceKernelFreeMemBlock(%d) result: 0x%08X\n", uid, error);
 	assert(error == 0);
 }
 
@@ -1008,8 +1008,8 @@ void Graphics::freeFragmentUsseMem(SceUID uid)
 //static callback function which allocates memory for the shader patcher, not a member of Graphics
 static void* allocPatcherMem(void *userData, SceSize size)
 {
-	EMPrintf("Allocating patcher memory\n");
-	EMPrintf("SceSize: %u\n", size);
+	vitaPrintf("Allocating patcher memory\n");
+	vitaPrintf("SceSize: %u\n", size);
 	UNUSED(userData);
 	return malloc(size);
 }
@@ -1017,7 +1017,7 @@ static void* allocPatcherMem(void *userData, SceSize size)
 //static callback which frees shader patcher memory, not a member of Graphics
 static void freePatcherMem(void *userData, void *memory)
 {
-	EMPrintf("Freeing patcher memory at address: %p\n", memory);
+	vitaPrintf("Freeing patcher memory at address: %p\n", memory);
 	UNUSED(userData);
 	free(memory);
 }
