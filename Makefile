@@ -16,8 +16,7 @@ LIBS := -lSceDisplay_stub -lSceGxm_stub -lScePgf_stub -lSceSysmodule_stub \
 
 SRC_C :=$(call rwildcard, src/, *.c)
 SRC_CPP :=$(call rwildcard, src/, *.cpp)
-#SRC_SHADER :=$(call rwildcard, src/shaders/, *.cg)
-#SRC_SHADER_BIN :=$(call rwildcard, out/shaders/, *.gxp)
+#I commented here to show a friend how git works
 
 OBJ_DIRS := $(addprefix out/, $(dir $(SRC_C:src/%.c=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/%.cpp=%.o)))
 #SHADER_DIRS := $(addprefix out/shaders/, $(dir $(SRC_SHADER:src/shaders/%.cg=%.gxp)))  $(addprefix out/shaders/bin/, $(dir $(SRC_SHADER_BIN:src/shaders/%.gxp=%.obj)))
