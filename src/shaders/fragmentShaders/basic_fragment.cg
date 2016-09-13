@@ -1,0 +1,6 @@
+﻿//a simple 'basic' fragment shader program
+
+float4 main(float4 vColor : TEXCOORD0)
+{
+	return vColor;
+}

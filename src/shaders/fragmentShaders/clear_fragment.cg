@@ -1,0 +1,6 @@
+﻿//a simple 'clear' fragment shader program
+
+float4 main() : COLOR
+{
+	return 0.f;
+}
