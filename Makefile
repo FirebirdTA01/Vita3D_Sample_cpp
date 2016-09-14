@@ -37,11 +37,10 @@ package: $(PROJECT).vpk
 
 $(PROJECT).vpk: eboot.bin param.sfo
 	vita-pack-vpk -s param.sfo -b eboot.bin \
-		--add sce_sys/icon0.png=sce_sys/icon0.png \
-		--add sce_sys/pic0.png=sce_sys/pic0.png \
 		--add sce_sys/livearea/contents/bg.png=sce_sys/livearea/contents/bg.png \
-		--add sce_sys/livearea/contents/logo0.png=sce_sys/livearea/contents/logo0.png \
+		--add sce_sys/livearea/contents/icon0.png=sce_sys/livearea/contents/icon0.png \
 		--add sce_sys/livearea/contents/logo1.png=sce_sys/livearea/contents/logo1.png \
+		--add sce_sys/livearea/contents/logo2.png=sce_sys/livearea/contents/logo2.png \
 		--add sce_sys/livearea/contents/startup.png=sce_sys/livearea/contents/startup.png \
 		--add sce_sys/livearea/contents/template.xml=sce_sys/livearea/contents/template.xml \
 	$(PROJECT).vpk
