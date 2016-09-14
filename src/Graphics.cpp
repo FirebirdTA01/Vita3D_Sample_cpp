@@ -5,6 +5,8 @@
 #include <assert.h>
 
 #include <psp2/kernel/processmgr.h>
+#include <psp2/sysmodule.h>
+#include <psp2/types.h>
 
 //These callbacks need to be static and not a class object (compiler complains of conversion)
 //Callback when displaying a frame buffer
@@ -72,7 +74,7 @@ Graphics::Graphics()
 	patcherFragmentUsseUID = -1;
 	patcherFragmentUsse_ptr = nullptr;
 	patcherFragmentUsseOffset = 0;
-	_registeredPrograms.clear();
+	_registeredProgramIDs.clear();
 	//patcherProgramCreationParams
 	//default creation vertex stream
 	_vertexStreamMap.clear();
@@ -167,13 +169,6 @@ void Graphics::initGraphics()
 		&fragmentUsseRingBufUID,
 		&fragmentUsseRingBufOffset
 	);
-	//vertex USSE
-	/*vitaPrintf("\nAllocating memory for the vertex USSE ring buffer...\n");
-	vertexUsseRingBuf_ptr = allocVertexUsseMem(
-		SCE_GXM_DEFAULT_VERTEX_USSE_RING_BUFFER_SIZE,
-		&vertexUsseRingBufUID,
-		&vertexUsseRingBufOffset
-	);*/
 
 	vitaPrintf("\nSetting libgmx render context parameters - Using defaults\n");
 	//now we set the libgxm render context parameters
@@ -234,7 +229,7 @@ void Graphics::initGraphics()
 			SCE_KERNEL_MEMBLOCK_TYPE_USER_CDRAM_RW,
 			ALIGN_MEM(4 * DISPLAY_STRIDE_IN_PIXELS * DISPLAY_HEIGHT, 1 * 1024 * 1024),
 			SCE_GXM_COLOR_SURFACE_ALIGNMENT,
-			SCE_GXM_MEMORY_ATTRIB_RW,
+			SCE_GXM_MEMORY_ATTRIB_READ | SCE_GXM_MEMORY_ATTRIB_WRITE,
 			&_displayBufferUIDs[i]
 		);
 
@@ -245,7 +240,7 @@ void Graphics::initGraphics()
 			uint32_t *row = (uint32_t *)_displayBuffers[i] + j * DISPLAY_STRIDE_IN_PIXELS;
 
 			for (uint32_t y = 0; y < DISPLAY_WIDTH; y++)
-				row[y] = 0xffff00ff; //TO DO: use bitshift macro and ABGR8 color format instead;
+				row[y] = COLOR_RED;
 		}
 
 		vitaPrintf("Initializing gxm color surface for this buffer\n");
@@ -305,7 +300,7 @@ void Graphics::initGraphics()
 		SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE,
 		sampleCount * 4,
 		SCE_GXM_DEPTHSTENCIL_SURFACE_ALIGNMENT,
-		SCE_GXM_MEMORY_ATTRIB_RW,
+		SCE_GXM_MEMORY_ATTRIB_READ | SCE_GXM_MEMORY_ATTRIB_WRITE,
 		&depthBufUID
 	);
 
@@ -360,7 +355,7 @@ void Graphics::initShaderPatcher(PatcherSizes* sizes)
 		SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE,
 		sizes->patchBufferSize,
 		4,
-		SCE_GXM_MEMORY_ATTRIB_RW,
+		SCE_GXM_MEMORY_ATTRIB_READ | SCE_GXM_MEMORY_ATTRIB_WRITE,
 		&patcherBufUID
 	);
 
@@ -504,6 +499,7 @@ void Graphics::swapBuffers()
 	backBufIndex = (backBufIndex + 1) % DISPLAY_BUFFER_COUNT;
 }
 
+//TO DO: These should be updated to use built in clear vertex/fragment shaders to do this correctly
 void Graphics::clearScreen()
 {
 	for (int b = 0; b < DISPLAY_BUFFER_COUNT; b++)
@@ -554,17 +550,17 @@ SceGxmShaderPatcherId Graphics::patcherRegisterProgram(const SceGxmProgram *cons
 	vitaPrintf("sceGxmShaderPatcherRegisterProgram() result: 0x%08X\n", error);
 	//assert(error == 0);
 
-	_registeredPrograms.push_back(programID);
+	_registeredProgramIDs.push_back(programID);
 
 	//return the last element in the vector (what we just added)
-	return _registeredPrograms.back();
+	return _registeredProgramIDs.back();
 }
 
 void Graphics::patcherUnregisterPrograms()
 {
 	int error = 0;
 	std::vector<SceGxmShaderPatcherId>::iterator iter;
-	for (iter = _registeredPrograms.begin(); iter != _registeredPrograms.end(); iter++)
+	for (iter = _registeredProgramIDs.begin(); iter != _registeredProgramIDs.end(); iter++)
 	{
 		vitaPrintf("Unregistering shader program from the patcher\nProgram ID: %d\n", *iter);
 		error = sceGxmShaderPatcherUnregisterProgram(patcher_ptr, *iter);
@@ -802,7 +798,7 @@ SceGxmShaderPatcher* Graphics::getShaderPatcher()
 /*----- Memory Functions start here -----*/
 
  //Allocates memory and maps it to the GPU
-void *Graphics::allocGraphicsMem(SceKernelMemBlockType type, SceSize size, uint32_t alignment, SceGxmMemoryAttribFlags attributes, SceUID *uid)
+void *Graphics::allocGraphicsMem(SceKernelMemBlockType type, SceSize size, uint32_t alignment, unsigned int attributes, SceUID *uid)
 {
 	int error = 0;
 
@@ -847,7 +843,7 @@ void *Graphics::allocGraphicsMem(SceKernelMemBlockType type, SceSize size, uint3
 
 	//map memory for the GPU
 	vitaPrintf("Mapping graphics memory\n");
-	error = sceGxmMapMemory(memory, size, attributes);
+	error = sceGxmMapMemory(memory, size, (SceGxmMemoryAttribFlags)attributes);
 	assert(error == 0);
 
 	return memory;
@@ -892,7 +888,7 @@ void *Graphics::allocVertexUsseMem(SceSize size, SceUID *uid, unsigned int *usse
 	size = ALIGN_MEM(size, 4096);
 
 	//allocate the memory
-	*uid = sceKernelAllocMemBlock("basic", SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE, size, NULL);
+	*uid = sceKernelAllocMemBlock("vertex_usse", SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE, size, NULL);
 	assert(*uid >= 0);
 
 	//get the base address
@@ -952,7 +948,7 @@ void *Graphics::allocFragmentUsseMem(SceSize size, SceUID *uid, unsigned int *us
 	size = ALIGN_MEM(size, 4096);
 
 	//allocate the memory
-	*uid = sceKernelAllocMemBlock("basic", SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE, size, NULL);
+	*uid = sceKernelAllocMemBlock("fragment_usse", SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE, size, NULL);
 	assert(*uid >= 0);
 
 	//get the base address

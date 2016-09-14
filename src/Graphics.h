@@ -196,7 +196,7 @@ private:
 	void* patcherFragmentUsse_ptr;
 	unsigned int patcherFragmentUsseOffset;
 	//all of the registered programs
-	std::vector<SceGxmShaderPatcherId> _registeredPrograms;
+	std::vector<SceGxmShaderPatcherId> _registeredProgramIDs;
 	std::vector<SceGxmVertexProgram*> _vertexPrograms;
 	std::vector<SceGxmFragmentProgram*> _fragmentPrograms;
 	//The settings for creating programs, can be changed using patcherSetProgramCreatingParams()
@@ -214,7 +214,7 @@ private:
 	//Callback and memory related methods
 	//Allocates memory and maps it to the GPU
 public:
-	void *allocGraphicsMem(SceKernelMemBlockType type, SceSize size, uint32_t alignment, SceGxmMemoryAttribFlags attribs, SceUID *uid);
+	void *allocGraphicsMem(SceKernelMemBlockType type, SceSize size, uint32_t alignment, unsigned int attribs, SceUID *uid);
 	void freeGraphicsMem(SceUID uid);
 private:
 
