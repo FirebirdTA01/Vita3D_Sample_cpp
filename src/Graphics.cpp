@@ -734,21 +734,23 @@ SceGxmFragmentProgram* Graphics::patcherCreateFragmentProgram(SceGxmShaderPatche
 
 void Graphics::patcherSetVertexProgram(const SceGxmVertexProgram* program)
 {
-	vitaPrintf("\nSetting vertex program to program at address: %p\n", program);
+	//vitaPrintf("\nSetting vertex program to program at address: %p\n", program);
 	sceGxmSetVertexProgram(gxmContext_ptr, program);
 }
 
 void Graphics::patcherSetFragmentProgram(const SceGxmFragmentProgram* program)
 {
-	vitaPrintf("\nSetting fragment program to program at address: %p\n", program);
+	//vitaPrintf("\nSetting fragment program to program at address: %p\n", program);
 	sceGxmSetFragmentProgram(gxmContext_ptr, program);
 }
 
 void Graphics::patcherSetVertexStream(unsigned int streamIndex, const void* vertices)
 {
+	/*
 	vitaPrintf("Setting vertex stream...\n");
 	vitaPrintf("\tStreamIndex: %u\n", streamIndex);
 	vitaPrintf("\tStream at address: %p\n", vertices);
+	*/
 
 	sceGxmSetVertexStream(gxmContext_ptr, streamIndex, vertices);
 }
