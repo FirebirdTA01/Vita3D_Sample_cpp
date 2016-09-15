@@ -711,7 +711,7 @@ SceGxmFragmentProgram* Graphics::patcherCreateFragmentProgram(SceGxmShaderPatche
 	vitaPrintf("\tOutput Register Format: 0x%08\n", outputRegisterFormat);
 	vitaPrintf("\tAnti-aliasing mode: 0x%08\n", MSAA_MODE);
 	vitaPrintf("\tBlend info at address: NOT USED\n");
-	vitaPrintf("Using vertex program with ID: %d\n", vertexProgramID);
+	vitaPrintf("Using vertex program with ID: %u\n", vertexProgramID);
 
 	SceGxmFragmentProgram* fragmentProgram_ptr;
 	int error = sceGxmShaderPatcherCreateFragmentProgram(
@@ -723,7 +723,7 @@ SceGxmFragmentProgram* Graphics::patcherCreateFragmentProgram(SceGxmShaderPatche
 		sceGxmShaderPatcherGetProgramFromId(vertexProgramID),		//Pointer to the vertex program (The GXP), or null
 		&fragmentProgram_ptr										//Double pointer to storage for fragment program
 	);
-	vitaPrintf("sceGxmShaderPatcherCreateVertexProgram() result: 0x%08\n", error);
+	vitaPrintf("sceGxmShaderPatcherCreateFragmentProgram() result: 0x%08\n", error);
 	assert(error == 0);
 
 	//pushback to vector containing loaded programs
@@ -734,21 +734,44 @@ SceGxmFragmentProgram* Graphics::patcherCreateFragmentProgram(SceGxmShaderPatche
 
 void Graphics::patcherSetVertexProgram(const SceGxmVertexProgram* program)
 {
+	vitaPrintf("\nSetting vertex program to program at address: %p\n", program);
 	sceGxmSetVertexProgram(gxmContext_ptr, program);
 }
 
 void Graphics::patcherSetFragmentProgram(const SceGxmFragmentProgram* program)
 {
+	vitaPrintf("\nSetting fragment program to program at address: %p\n", program);
 	sceGxmSetFragmentProgram(gxmContext_ptr, program);
 }
 
-void Graphics::patcherSetVertexStream(unsigned int streamIndex, const void* stream)
+void Graphics::patcherSetVertexStream(unsigned int streamIndex, const void* vertices)
 {
-	sceGxmSetVertexStream(gxmContext_ptr, streamIndex, stream);
+	vitaPrintf("Setting vertex stream...\n");
+	vitaPrintf("\tStreamIndex: %u\n", streamIndex);
+	vitaPrintf("\tStream at address: %p\n", vertices);
+
+	sceGxmSetVertexStream(gxmContext_ptr, streamIndex, vertices);
 }
 
 void Graphics::patcherSetVertexProgramConstants(void* uniformBuffer, const SceGxmProgramParameter* worldViewProjection, unsigned int componentOffset, unsigned int componentCount, const float *sourceData)
 {
+	/*
+	vitaPrintf("\nSetting vertex program constants...\n");
+	if (uniformBuffer == NULL)
+		vitaPrintf("\tReserving a NULL 'default' buffer\n");
+	else
+		vitaPrintf("\tReserving default buffer using one at address: %p\n", uniformBuffer);
+	vitaPrintf("\tWorld view projection parameters at address: %p\n", worldViewProjection);
+	vitaPrintf("\tComponent offset: %u\n", componentOffset);
+	vitaPrintf("\tComponent count: %u\n", componentCount);
+	vitaPrintf("\tSource data at address: %p\n", sourceData);
+
+	vitaPrintf("SourceData contents...\n");
+	for (int i = 0; i < componentCount; i++)
+	{
+		vitaPrintf("\tData %u: %ff\n", i, sourceData[i]);
+	}
+	*/
 	sceGxmReserveVertexDefaultUniformBuffer(gxmContext_ptr, &uniformBuffer);
 	sceGxmSetUniformDataF(uniformBuffer, worldViewProjection, componentOffset, componentCount, sourceData);
 }

@@ -74,6 +74,8 @@ Triangle::Triangle() :
 	clearIndicesUID = -1;
 	basicVerticesUID = -1;
 	basicIndicesUID = -1;
+
+	triangleRotation = 0.0f;
 }
 
 Triangle::~Triangle()
@@ -165,24 +167,22 @@ void Triangle::init()
 	//create basic shaded triangle vetices/indice
 	basicVertices[0].x = -0.5f;
 	basicVertices[0].y = -0.5f;
-	basicVertices[0].z = 0.0f;
-	basicVertices[0].color = 0xff0000ff;
+	basicVertices[0].z = +0.5f;
+	basicVertices[0].color = COLOR_RED;
 	basicVertices[1].x = 0.5f;
 	basicVertices[1].y = -0.5f;
-	basicVertices[1].z = 0.0f;
-	basicVertices[1].color = 0xff00ff00;
+	basicVertices[1].z = +0.5f;
+	basicVertices[1].color = COLOR_GREEN;
 	basicVertices[2].x = -0.5f;
 	basicVertices[2].y = 0.5f;
-	basicVertices[2].z = 0.0f;
-	basicVertices[2].color = 0xffff0000;
+	basicVertices[2].z = +0.5f;
+	basicVertices[2].color = COLOR_BLUE;
 
 	vitaPrintf("Setting up basic indices\n");
 	basicIndices[0] = 0;
 	basicIndices[1] = 1;
 	basicIndices[2] = 2;
 
-	//Just to get something working real quick... this is suppossed to be const correct, but I'll fix that later
-	//for now just do const_cast when using this
 	vitaPrintf("Loading World-View-Projection parameters from vertex program at address: %p\n", basicVertexProgram_ptr);
 	const SceGxmProgramParameter* wvpParam_ptr = sceGxmProgramFindParameterByName(sceGxmShaderPatcherGetProgramFromId(basicVertexProgramID), "wvp");
 	assert(wvpParam_ptr && (sceGxmProgramParameterGetCategory(wvpParam_ptr) == SCE_GXM_PARAMETER_CATEGORY_UNIFORM));
@@ -192,9 +192,9 @@ void Triangle::init()
 void Triangle::update()
 {
 	//update trianlge angle
-	triangleRotation += (PI * 2) / 60.f;
-	if (triangleRotation > PI * 2)
-		triangleRotation -= PI * 2;
+	triangleRotation += ((PI * 2.f) / 60.f);
+	if (triangleRotation > (PI * 2.f))
+		triangleRotation -= (PI * 2.f);
 
 	//4x4 matrix for rotation
 	float aspectRatio = (float)DISPLAY_WIDTH / (float)DISPLAY_HEIGHT;

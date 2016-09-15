@@ -36,6 +36,7 @@ int main()
 		triangle.update();
 
 		Graphics::getInstance()->startScene();
+		Graphics::getInstance()->clearScreen();
 
 		triangle.draw();
 
