@@ -1,0 +1,379 @@
+Initializing Logger
+Logger Initialized
+Initializing graphics system
+Initializing SCE GXM
+sceGxmInitialize() result: 0x00000000
+Setting up ring buffers...
+
+Allocating memory for the VDM ring buffer...
+Allocating GPU memory...
+SceKernelMemBlockType: 203456608
+SceSize: 131072
+SceGxmMemoryAttribFlags: 1
+
+Aligning memory... Doing a 4kb alignment
+SceUID created: 1073807523
+Mapping graphics memory
+
+Allocating memory for the vertex ring buffer...
+Allocating GPU memory...
+SceKernelMemBlockType: 203456608
+SceSize: 2097152
+SceGxmMemoryAttribFlags: 1
+
+Aligning memory... Doing a 4kb alignment
+SceUID created: 1073807525
+Mapping graphics memory
+
+Allocating memory for the fragment ring buffer...
+Allocating GPU memory...
+SceKernelMemBlockType: 203456608
+SceSize: 524288
+SceGxmMemoryAttribFlags: 1
+
+Aligning memory... Doing a 4kb alignment
+SceUID created: 1073807527
+Mapping graphics memory
+
+Allocating memory for the fragment USSE ring buffer...
+Allocating fragment USSE GPU memory...
+SceSize: 16384
+sceKernelGetMemBlockBase(1073807529) result: 0x00000000
+Mapping memory as fragment USSE code for gpu
+sceGxmMapFragmentUsseMemory(1073807529) result: 0x00000000
+
+Setting libgmx render context parameters - Using defaults
+Creating GXM context
+sceGxmCreateContext() result: 0x00000000
+
+Setting render target parameters
+Creating the render target
+sceGxmCreateRenderTarget() result: 0x00000000
+
+Allocating display buffers and sync objects...
+
+Working on display buffer: 0
+Allocating GPU memory...
+SceKernelMemBlockType: 155222112
+SceSize: 3145728
+SceGxmMemoryAttribFlags: 3
+
+Aligning memory... Doing a 256kb alignment
+SceUID created: 1073807533
+Mapping graphics memory
+Setting the buffer to a noticeable color
+Initializing gxm color surface for this buffer
+sceGxmColorSurfaceInit() result: 0x00000000
+Creating a sync object for this buffer
+sceGxmSyncObjectCreate() result: 0x00000000
+
+Working on display buffer: 1
+Allocating GPU memory...
+SceKernelMemBlockType: 155222112
+SceSize: 3145728
+SceGxmMemoryAttribFlags: 3
+
+Aligning memory... Doing a 256kb alignment
+SceUID created: 1073807535
+Mapping graphics memory
+Setting the buffer to a noticeable color
+Initializing gxm color surface for this buffer
+sceGxmColorSurfaceInit() result: 0x00000000
+Creating a sync object for this buffer
+sceGxmSyncObjectCreate() result: 0x00000000
+
+Working on display buffer: 2
+Allocating GPU memory...
+SceKernelMemBlockType: 155222112
+SceSize: 3145728
+SceGxmMemoryAttribFlags: 3
+
+Aligning memory... Doing a 256kb alignment
+SceUID created: 1073807537
+Mapping graphics memory
+Setting the buffer to a noticeable color
+Initializing gxm color surface for this buffer
+sceGxmColorSurfaceInit() result: 0x00000000
+Creating a sync object for this buffer
+sceGxmSyncObjectCreate() result: 0x00000000
+
+Not using antialiasing
+
+Creating the depth-buffer
+Allocating GPU memory...
+SceKernelMemBlockType: 203456608
+SceSize: 2088960
+SceGxmMemoryAttribFlags: 3
+
+Aligning memory... Doing a 4kb alignment
+SceUID created: 1073807539
+Mapping graphics memory
+Initializing depth stencil surface
+sceGxmDepthStencilSurfaceInit() result: 0x00000000
+
+Setting up shader patcher
+
+Allocating memory for the shader patcher buffer
+Allocating GPU memory...
+SceKernelMemBlockType: 203456608
+SceSize: 65536
+SceGxmMemoryAttribFlags: 3
+
+Aligning memory... Doing a 4kb alignment
+SceUID created: 1073807541
+Mapping graphics memory
+
+Allocating memory for patcher's vertex USSE programs
+Allocating vertex USSE GPU memory...
+SceSize: 65536
+sceKernelGetMemBlockBase(1073807543) result: 0x00000000
+Mapping memory as vertex USSE code for gpu
+sceGxmMapVertexUsseMemory(1073807543) result: 0x00000000
+
+Allocating memory for patcher's fragment USSE programs
+Allocating fragment USSE GPU memory...
+SceSize: 65536
+sceKernelGetMemBlockBase(1073807545) result: 0x00000000
+Mapping memory as fragment USSE code for gpu
+sceGxmMapFragmentUsseMemory(1073807545) result: 0x00000000
+
+Setting shader patcher parameters
+
+Creating the shader patcher
+Allocating patcher memory
+SceSize: 184
+Allocating patcher memory
+SceSize: 12
+Allocating patcher memory
+SceSize: 12
+Allocating patcher memory
+SceSize: 12
+sceGxmShaderPatcherCreate() result: 0x00000000
+Allocating GPU memory...
+SceKernelMemBlockType: 203456608
+SceSize: 24
+SceGxmMemoryAttribFlags: 1
+
+Aligning memory... Doing a 4kb alignment
+SceUID created: 1073807547
+Mapping graphics memory
+Allocating GPU memory...
+SceKernelMemBlockType: 203456608
+SceSize: 6
+SceGxmMemoryAttribFlags: 1
+
+Aligning memory... Doing a 4kb alignment
+SceUID created: 1073807549
+Mapping graphics memory
+Allocating GPU memory...
+SceKernelMemBlockType: 203456608
+SceSize: 48
+SceGxmMemoryAttribFlags: 1
+
+Aligning memory... Doing a 4kb alignment
+SceUID created: 1073807551
+Mapping graphics memory
+Allocating GPU memory...
+SceKernelMemBlockType: 203456608
+SceSize: 6
+SceGxmMemoryAttribFlags: 1
+
+Aligning memory... Doing a 4kb alignment
+SceUID created: 1073807553
+Mapping graphics memory
+
+Initializing a triangle object
+
+Checking shader program
+Program address: 0x810f0024
+sceGxmProgramCheck() result: 0x00000000
+Registering shader program with the patcher
+Allocating patcher memory
+SceSize: 36
+sceGxmShaderPatcherRegisterProgram() result: 0x00000000
+
+Checking shader program
+Program address: 0x810f0130
+sceGxmProgramCheck() result: 0x00000000
+Registering shader program with the patcher
+Allocating patcher memory
+SceSize: 36
+sceGxmShaderPatcherRegisterProgram() result: 0x00000000
+
+Checking shader program
+Program address: 0x810f0224
+sceGxmProgramCheck() result: 0x00000000
+Registering shader program with the patcher
+Allocating patcher memory
+SceSize: 36
+sceGxmShaderPatcherRegisterProgram() result: 0x00000000
+
+Checking shader program
+Program address: 0x810f037c
+sceGxmProgramCheck() result: 0x00000000
+Registering shader program with the patcher
+Allocating patcher memory
+SceSize: 36
+sceGxmShaderPatcherRegisterProgram() result: 0x00000000
+
+Program creation parameter requested change!
+Changing vertex stream type...
+A vertex program requests a vertex stream that doesn't exist yet! Creating one
+Vertex stream type: 1
+New stream parameters...
+Stride: 8
+Index source: 0
+
+Creating shader patcher vertex program from program with ID: 2166361784
+Adding vertex program attribute: aPosition
+Setting vertex attribute.regIndex: 0
+
+Vertex Program and Stream Attributes...
+Pointer the the patcher at address: 0x81200dc8
+ProgramID: 2166361784
+Program attributes at address: 0x81180ef4
+	Attribute - stream index: 0
+	Attribute - offset: 0
+	Attribute - format: 0x0000000
+	Attribute - component count: 2
+	Attribute count: 1
+Current vertex stream at address: 0x810f10fc
+	Stream Attribute - stride: 8
+	Stream Attribute - index source: 0x0000000
+Stream count: 1
+Allocating patcher memory
+SceSize: 203
+Allocating patcher memory
+SceSize: 12
+sceGxmShaderPatcherCreateVertexProgram() result: 0x0000000
+
+Creating shader patcher fragment program from program with ID: 2166361840
+
+Fragment Program Attributes...
+Pointer the the patcher at address: 0x81200dc8
+ProgramID: 2166361840
+Settings used for program creation:
+	Output Register Format: 0x0000000
+	Anti-aliasing mode: 0x0000000
+	Blend info at address: NOT USED
+Using vertex program with ID: 2166361784
+Allocating patcher memory
+SceSize: 167
+Allocating patcher memory
+SceSize: 12
+sceGxmShaderPatcherCreateFragmentProgram() result: 0x0000000
+
+Program creation parameter requested change!
+Changing vertex stream type...
+A vertex program requests a vertex stream that doesn't exist yet! Creating one
+Vertex stream type: 5
+New stream parameters...
+Stride: 8
+Index source: 0
+
+Creating shader patcher vertex program from program with ID: 2166361896
+Adding vertex program attribute: aPosition
+Setting vertex attribute.regIndex: 0
+Adding vertex program attribute: aColor
+Setting vertex attribute.regIndex: 4
+
+Vertex Program and Stream Attributes...
+Pointer the the patcher at address: 0x81200dc8
+ProgramID: 2166361896
+Program attributes at address: 0x81180ee4
+	Attribute - stream index: 0
+	Attribute - offset: 0
+	Attribute - format: 0x0000000
+	Attribute - component count: 3
+	Attribute count: 2
+Current vertex stream at address: 0x810f10fc
+	Stream Attribute - stride: 8
+	Stream Attribute - index source: 0x0000000
+Stream count: 1
+Allocating patcher memory
+SceSize: 239
+Allocating patcher memory
+SceSize: 12
+sceGxmShaderPatcherCreateVertexProgram() result: 0x0000000
+
+Creating shader patcher fragment program from program with ID: 2166361960
+
+Fragment Program Attributes...
+Pointer the the patcher at address: 0x81200dc8
+ProgramID: 2166361960
+Settings used for program creation:
+	Output Register Format: 0x0000000
+	Anti-aliasing mode: 0x0000000
+	Blend info at address: NOT USED
+Using vertex program with ID: 2166361896
+Allocating patcher memory
+SceSize: 171
+Allocating patcher memory
+SceSize: 12
+sceGxmShaderPatcherCreateFragmentProgram() result: 0x0000000
+Setting up clear vertices
+Setting up clear indices
+Setting up basic vertices
+Setting up basic indices
+Loading World-View-Projection parameters from vertex program at address: 0x81201170
+
+Cleaning up after a triangle object
+
+Shutting down graphics system
+Freeing allocated gpu memory for SceUID: 1073807539
+sceGxmUnmapMemory(1073807539) result: 0x00000000
+sceKernelFreeMemBlock(1073807539) result: 0x00000000
+Freeing allocated gpu memory for SceUID: 1073807533
+sceGxmUnmapMemory(1073807533) result: 0x00000000
+sceKernelFreeMemBlock(1073807533) result: 0x00000000
+Freeing allocated gpu memory for SceUID: 1073807535
+sceGxmUnmapMemory(1073807535) result: 0x00000000
+sceKernelFreeMemBlock(1073807535) result: 0x00000000
+Freeing allocated gpu memory for SceUID: 1073807537
+sceGxmUnmapMemory(1073807537) result: 0x00000000
+sceKernelFreeMemBlock(1073807537) result: 0x00000000
+
+Cleaning up shader patcher
+Unregistering shader program from the patcher
+Program ID: -2128605512
+sceGxmShaderPatcherRegisterProgram() result: 0x805B000C
+Unregistering shader program from the patcher
+Program ID: -2128605456
+sceGxmShaderPatcherRegisterProgram() result: 0x805B000C
+Unregistering shader program from the patcher
+Program ID: -2128605400
+sceGxmShaderPatcherRegisterProgram() result: 0x805B000C
+Unregistering shader program from the patcher
+Program ID: -2128605336
+sceGxmShaderPatcherRegisterProgram() result: 0x805B000C
+Freeing allocated fragment USSE gpu memory for SceUID: 1073807545
+sceKernelGetMemBlockBase(1073807545) result: 0x00000000
+Unmapping fragment USSE memory
+sceGxmUnmapFragmentUsseMemory(1073807545) result: 0x00000000
+sceKernelFreeMemBlock(1073807545) result: 0x00000000
+Freeing allocated vertex USSE gpu memory for SceUID: 1073807543
+sceKernelGetMemBlockBase(1073807543) result: 0x00000000
+Unmapping vertex USSE memory
+sceGxmUnmapVertexUsseMemory(1073807543) result: 0x00000000
+sceKernelFreeMemBlock(1073807543) result: 0x00000000
+Freeing allocated gpu memory for SceUID: 1073807541
+sceGxmUnmapMemory(1073807541) result: 0x00000000
+sceKernelFreeMemBlock(1073807541) result: 0x00000000
+Destroying the render target
+Destroying the gxm context
+Freeing allocated fragment USSE gpu memory for SceUID: 1073807529
+sceKernelGetMemBlockBase(1073807529) result: 0x00000000
+Unmapping fragment USSE memory
+sceGxmUnmapFragmentUsseMemory(1073807529) result: 0x00000000
+sceKernelFreeMemBlock(1073807529) result: 0x00000000
+Freeing allocated gpu memory for SceUID: 1073807527
+sceGxmUnmapMemory(1073807527) result: 0x00000000
+sceKernelFreeMemBlock(1073807527) result: 0x00000000
+Freeing allocated gpu memory for SceUID: 1073807525
+sceGxmUnmapMemory(1073807525) result: 0x00000000
+sceKernelFreeMemBlock(1073807525) result: 0x00000000
+Freeing allocated gpu memory for SceUID: 1073807523
+sceGxmUnmapMemory(1073807523) result: 0x00000000
+sceKernelFreeMemBlock(1073807523) result: 0x00000000
+Terminating the GXM
+Shutting-down Logger
