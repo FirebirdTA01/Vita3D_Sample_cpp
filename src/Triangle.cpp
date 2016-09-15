@@ -167,15 +167,15 @@ void Triangle::init()
 	//create basic shaded triangle vetices/indice
 	basicVertices[0].x = -0.5f;
 	basicVertices[0].y = -0.5f;
-	basicVertices[0].z = +0.5f;
+	basicVertices[0].z = 0.0f;
 	basicVertices[0].color = COLOR_RED;
 	basicVertices[1].x = 0.5f;
 	basicVertices[1].y = -0.5f;
-	basicVertices[1].z = +0.5f;
+	basicVertices[1].z = 0.0f;
 	basicVertices[1].color = COLOR_GREEN;
 	basicVertices[2].x = -0.5f;
 	basicVertices[2].y = 0.5f;
-	basicVertices[2].z = +0.5f;
+	basicVertices[2].z = 0.0f;
 	basicVertices[2].color = COLOR_BLUE;
 
 	vitaPrintf("Setting up basic indices\n");

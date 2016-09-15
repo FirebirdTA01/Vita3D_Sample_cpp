@@ -502,28 +502,23 @@ void Graphics::swapBuffers()
 //TO DO: These should be updated to use built in clear vertex/fragment shaders to do this correctly
 void Graphics::clearScreen()
 {
-	for (int b = 0; b < DISPLAY_BUFFER_COUNT; b++)
-	{
-		for (uint32_t j = 0; j < DISPLAY_HEIGHT; j++)
-		{
-			uint32_t *row = (uint32_t *)_displayBuffers[b] + j * DISPLAY_STRIDE_IN_PIXELS;
 
-			for (uint32_t y = 0; y < DISPLAY_WIDTH; y++)
-				row[y] = COLOR_BLACK;
-		}
+	for (uint32_t i = 0; i < DISPLAY_HEIGHT; i++)
+	{
+		uint32_t *row = (uint32_t *)_displayBuffers[backBufIndex] + i * DISPLAY_STRIDE_IN_PIXELS;
+
+		for (uint32_t j = 0; j < DISPLAY_WIDTH; j++)
+			row[j] = COLOR_BLACK;
 	}
 }
 void Graphics::clearScreen(uint32_t color)
 {
-	for (int b = 0; b < DISPLAY_BUFFER_COUNT; b++)
+	for (uint32_t i = 0; i < DISPLAY_HEIGHT; i++)
 	{
-		for (uint32_t j = 0; j < DISPLAY_HEIGHT; j++)
-		{
-			uint32_t *row = (uint32_t *)_displayBuffers[b] + j * DISPLAY_STRIDE_IN_PIXELS;
+		uint32_t *row = (uint32_t *)_displayBuffers[backBufIndex] + i * DISPLAY_STRIDE_IN_PIXELS;
 
-			for (uint32_t y = 0; y < DISPLAY_WIDTH; y++)
-				row[y] = color;
-		}
+		for (uint32_t j = 0; j < DISPLAY_WIDTH; j++)
+			row[j] = color;
 	}
 }
 
@@ -1069,6 +1064,6 @@ static void displayBufferCallback(const void *callbackData)
 	//assert(error == 0);
 
 	//Dont allow this callback unless the buffer swap has finished and the old buffer is no longer displayed
-	error = sceDisplayWaitVblankStart();
+	sceDisplayWaitVblankStart();
 	//assert(error == 0);
 }
