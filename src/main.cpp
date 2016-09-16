@@ -25,7 +25,7 @@ int main()
 
 	//main loop
 	bool running = true;
-	while (running)
+	do
 	{
 		//check control data
 		sceCtrlReadBufferPositive(0, &ctrl, 1);
@@ -42,7 +42,7 @@ int main()
 
 		Graphics::getInstance()->endScene();
 		Graphics::getInstance()->swapBuffers();
-	}
+	} while (running);
 
 	//wait until rendering is finished before cleaning things up
 	//sceGxmFinish(Graphics::getInstance()->getGxmContext()); done in Graphics::shutdown for now

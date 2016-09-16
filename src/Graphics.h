@@ -58,7 +58,7 @@ typedef struct BasicVertex
 	float x;
 	float y;
 	float z;
-	uint32_t color;
+	unsigned int color;
 } BasicVertex;
 
 typedef enum VertexStreamType
@@ -78,9 +78,9 @@ typedef enum VertexStreamType
 //patcher buffer sizes
 typedef struct PatcherSizes
 {
-	const uint32_t patchBufferSize;
-	const uint32_t patchVertexUsseSize;
-	const uint32_t patchFragmentUsseSize;
+	const SceSize patchBufferSize;
+	const SceSize patchVertexUsseSize;
+	const SceSize patchFragmentUsseSize;
 } PatcherSizes;
 
 //the default patcher sizes
@@ -214,16 +214,16 @@ private:
 	//Callback and memory related methods
 	//Allocates memory and maps it to the GPU
 public:
-	void *allocGraphicsMem(SceKernelMemBlockType type, SceSize size, uint32_t alignment, unsigned int attribs, SceUID *uid);
+	void *allocGraphicsMem(SceKernelMemBlockType type, unsigned int size, unsigned int alignment, unsigned int attribs, SceUID *uid);
 	void freeGraphicsMem(SceUID uid);
 private:
 
 	//Allocates memory and maps it as a vertex USSE
-	void *allocVertexUsseMem(SceSize size, SceUID *uid, unsigned int *usseOffset);
+	void *allocVertexUsseMem(unsigned int size, SceUID *uid, unsigned int *usseOffset);
 	void freeVertexUsseMem(SceUID uid);
 
 	//Allocates memory and maps it as a fragment USSE
-	void *allocFragmentUsseMem(SceSize size, SceUID *uid, unsigned int *usseOffset); 
+	void *allocFragmentUsseMem(unsigned int size, SceUID *uid, unsigned int *usseOffset); 
 	void freeFragmentUsseMem(SceUID uid);
 
 	//These are static callback functions, they will not be members of Graphics

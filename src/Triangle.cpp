@@ -112,7 +112,7 @@ void Triangle::init()
 	//basicVertexAttribs[0].regIndex = sceGxmProgramParameterGetResourceIndex(paramBasicPositionAttribute_ptr);
 
 	basicVertexAttribs[1].streamIndex = 0;
-	basicVertexAttribs[1].offset = 12;
+	basicVertexAttribs[1].offset = 12; //(x, y, z) * 4
 	basicVertexAttribs[1].format = SCE_GXM_ATTRIBUTE_FORMAT_U8N;
 	basicVertexAttribs[1].componentCount = 4;
 	//This is set in Graphics::patcherCreateVertexProgram()
@@ -168,22 +168,22 @@ void Triangle::init()
 	basicVertices[0].x = 0.0f;
 	basicVertices[0].y = 0.5f;
 	basicVertices[0].z = 0.0f;
-	basicVertices[0].color = COLOR_RED;
+	basicVertices[0].color = (unsigned int)COLOR_RED;
 	basicVertices[1].x = 0.5f;
 	basicVertices[1].y = -0.5f;
 	basicVertices[1].z = 0.0f;
-	basicVertices[1].color = COLOR_GREEN;
+	basicVertices[1].color = (unsigned int)COLOR_GREEN;
 	basicVertices[2].x = -0.5f;
 	basicVertices[2].y = -0.5f;
 	basicVertices[2].z = 0.0f;
-	basicVertices[2].color = COLOR_BLUE;
+	basicVertices[2].color = (unsigned int)COLOR_BLUE;
 
 	vitaPrintf("Setting up basic indices\n");
 	basicIndices[0] = 0;
 	basicIndices[1] = 1;
 	basicIndices[2] = 2;
 
-	vitaPrintf("Loading World-View-Projection parameters from vertex program at address: %p\n", basicVertexProgram_ptr);
+	vitaPrintf("Loading World-View-Projection parameters from vertex program at address: %p\n", sceGxmShaderPatcherGetProgramFromId(basicVertexProgramID));
 	const SceGxmProgramParameter* wvpParam_ptr = sceGxmProgramFindParameterByName(sceGxmShaderPatcherGetProgramFromId(basicVertexProgramID), "wvp");
 	assert(wvpParam_ptr && (sceGxmProgramParameterGetCategory(wvpParam_ptr) == SCE_GXM_PARAMETER_CATEGORY_UNIFORM));
 	_wvpParams.insert(_wvpParams.begin(), std::make_pair("wvp", wvpParam_ptr));

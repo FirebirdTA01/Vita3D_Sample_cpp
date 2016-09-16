@@ -227,7 +227,8 @@ void Graphics::initGraphics()
 		//allocate large alignment (1MB) memory to ensure it's physically continuous/not broken
 		_displayBuffers[i] = allocGraphicsMem(
 			SCE_KERNEL_MEMBLOCK_TYPE_USER_CDRAM_RW,
-			ALIGN_MEM(4 * DISPLAY_STRIDE_IN_PIXELS * DISPLAY_HEIGHT, 1 * 1024 * 1024),
+			//ALIGN_MEM(4 * DISPLAY_STRIDE_IN_PIXELS * DISPLAY_HEIGHT, 1 * 1024 * 1024),
+			4 * DISPLAY_STRIDE_IN_PIXELS * DISPLAY_HEIGHT,
 			SCE_GXM_COLOR_SURFACE_ALIGNMENT,
 			SCE_GXM_MEMORY_ATTRIB_READ | SCE_GXM_MEMORY_ATTRIB_WRITE,
 			&_displayBufferUIDs[i]
@@ -353,7 +354,7 @@ void Graphics::initShaderPatcher(PatcherSizes* sizes)
 	vitaPrintf("\nAllocating memory for the shader patcher buffer\n");
 	patcherBuf_ptr = allocGraphicsMem(
 		SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE,
-		sizes->patchBufferSize,
+		(SceSize)sizes->patchBufferSize,
 		4,
 		SCE_GXM_MEMORY_ATTRIB_READ | SCE_GXM_MEMORY_ATTRIB_WRITE,
 		&patcherBufUID
@@ -361,14 +362,14 @@ void Graphics::initShaderPatcher(PatcherSizes* sizes)
 
 	vitaPrintf("\nAllocating memory for patcher's vertex USSE programs\n");
 	patcherVertexUsse_ptr = allocVertexUsseMem(
-		sizes->patchVertexUsseSize,
+		(SceSize)sizes->patchVertexUsseSize,
 		&patcherVertexUsseUID,
 		&patcherVertexUsseOffset
 	);
 
 	vitaPrintf("\nAllocating memory for patcher's fragment USSE programs\n");
 	patcherFragmentUsse_ptr = allocFragmentUsseMem(
-		sizes->patchFragmentUsseSize,
+		(SceSize)sizes->patchFragmentUsseSize,
 		&patcherFragmentUsseUID,
 		&patcherFragmentUsseOffset
 	);
@@ -382,16 +383,16 @@ void Graphics::initShaderPatcher(PatcherSizes* sizes)
 	patcherParams.bufferAllocCallback = NULL;
 	patcherParams.bufferFreeCallback = NULL;
 	patcherParams.bufferMem = patcherBuf_ptr;
-	patcherParams.bufferMemSize = sizes->patchBufferSize;
+	patcherParams.bufferMemSize = (SceSize)sizes->patchBufferSize;
 	patcherParams.vertexUsseAllocCallback = NULL;
 	patcherParams.vertexUsseFreeCallback = NULL;
 	patcherParams.vertexUsseMem = patcherVertexUsse_ptr;
-	patcherParams.vertexUsseMemSize = sizes->patchVertexUsseSize;
+	patcherParams.vertexUsseMemSize = (SceSize)sizes->patchVertexUsseSize;
 	patcherParams.vertexUsseOffset = patcherVertexUsseOffset;
 	patcherParams.fragmentUsseAllocCallback = NULL;
 	patcherParams.fragmentUsseFreeCallback = NULL;
 	patcherParams.fragmentUsseMem = patcherFragmentUsse_ptr;
-	patcherParams.fragmentUsseMemSize = sizes->patchFragmentUsseSize;
+	patcherParams.fragmentUsseMemSize = (SceSize)sizes->patchFragmentUsseSize;
 	patcherParams.fragmentUsseOffset = patcherFragmentUsseOffset;
 
 	vitaPrintf("\nCreating the shader patcher\n");
@@ -622,7 +623,7 @@ void Graphics::patcherSetProgramCreationParams(VertexStreamType streamType)
 			return;
 		}
 
-		vitaPrintf("New stream parameters...\nStride: %u\nIndex source: %u\n", _vertexStreams[createdStreams - 1].stride, _vertexStreams[0].indexSource);
+		vitaPrintf("New stream parameters...\nStride: %u\nIndex source: %u\n", _vertexStreams[createdStreams - 1].stride, _vertexStreams[createdStreams -1].indexSource);
 		currentStreamType = streamType;
 		_vertexStreamMap.insert(iter, std::make_pair(streamType, _vertexStreams));
 	}
@@ -666,15 +667,20 @@ SceGxmVertexProgram* Graphics::patcherCreateVertexProgram(SceGxmShaderPatcherId 
 	vitaPrintf("Pointer the the patcher at address: %p\n", patcher_ptr);
 	vitaPrintf("ProgramID: %u\n", programID);
 	vitaPrintf("Program attributes at address: %p\n", attributes);
-	vitaPrintf("\tAttribute - stream index: %u\n", attributes[0].streamIndex);
-	vitaPrintf("\tAttribute - offset: %u\n", attributes[0].offset);
-	vitaPrintf("\tAttribute - format: 0x%08\n", attributes[0].format);
-	vitaPrintf("\tAttribute - component count: %u\n", attributes[0].componentCount);
 	vitaPrintf("\tAttribute count: %d\n", attributeCount);
+	for (int j = 0; j < attributeCount; j++)
+	{
+		vitaPrintf("\tAttribute %u - stream index: %u\n", j, attributes[j].streamIndex);
+		vitaPrintf("\tAttribute %u - offset: %u\n", j, attributes[j].offset);
+		vitaPrintf("\tAttribute %u - format: 0x%08\n", j, attributes[j].format);
+		vitaPrintf("\tAttribute %u - component count: %u\n", j, attributes[j].componentCount);
+		vitaPrintf("\tAttribute %u - reg index: %d\n", j, attributes[j].regIndex);
+	}
 	vitaPrintf("Current vertex stream at address: %p\n", currentStream->second);
+	vitaPrintf("Stream count: %d\n", 1);
+	vitaPrintf("\tStream Type: %u\n", currentStreamType);
 	vitaPrintf("\tStream Attribute - stride: %d\n", currentStream->second[createdStreams - 1].stride);
 	vitaPrintf("\tStream Attribute - index source: 0x%08\n", currentStream->second[createdStreams - 1].indexSource);
-	vitaPrintf("Stream count: %d\n", 1);
 
 	SceGxmVertexProgram* vertexProgram_ptr = nullptr;
 	error = sceGxmShaderPatcherCreateVertexProgram(
@@ -835,7 +841,7 @@ SceGxmShaderPatcher* Graphics::getShaderPatcher()
 /*----- Memory Functions start here -----*/
 
  //Allocates memory and maps it to the GPU
-void *Graphics::allocGraphicsMem(SceKernelMemBlockType type, SceSize size, uint32_t alignment, unsigned int attributes, SceUID *uid)
+void *Graphics::allocGraphicsMem(SceKernelMemBlockType type, unsigned int size, unsigned int alignment, unsigned int attributes, SceUID *uid)
 {
 	int error = 0;
 
@@ -913,7 +919,7 @@ void Graphics::freeGraphicsMem(SceUID uid)
 }
 
 //Allocates memory and maps it as a vertex USSE
-void *Graphics::allocVertexUsseMem(SceSize size, SceUID *uid, unsigned int *usseOffset)
+void *Graphics::allocVertexUsseMem(unsigned int size, SceUID *uid, unsigned int *usseOffset)
 {
 	int error = 0;
 	UNUSED(error);
@@ -973,7 +979,7 @@ void Graphics::freeVertexUsseMem(SceUID uid)
 }
 
 //Allocates memory and maps it as a fragment USSE
-void *Graphics::allocFragmentUsseMem(SceSize size, SceUID *uid, unsigned int *usseOffset)
+void *Graphics::allocFragmentUsseMem(unsigned int size, SceUID *uid, unsigned int *usseOffset)
 {
 	int error = 0;
 	UNUSED(error);
