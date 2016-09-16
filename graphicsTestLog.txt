@@ -55,7 +55,7 @@ Allocating display buffers and sync objects...
 Working on display buffer: 0
 Allocating GPU memory...
 SceKernelMemBlockType: 155222112
-SceSize: 3145728
+SceSize: 2228224
 SceGxmMemoryAttribFlags: 3
 
 Aligning memory... Doing a 256kb alignment
@@ -70,7 +70,7 @@ sceGxmSyncObjectCreate() result: 0x00000000
 Working on display buffer: 1
 Allocating GPU memory...
 SceKernelMemBlockType: 155222112
-SceSize: 3145728
+SceSize: 2228224
 SceGxmMemoryAttribFlags: 3
 
 Aligning memory... Doing a 256kb alignment
@@ -85,7 +85,7 @@ sceGxmSyncObjectCreate() result: 0x00000000
 Working on display buffer: 2
 Allocating GPU memory...
 SceKernelMemBlockType: 155222112
-SceSize: 3145728
+SceSize: 2228224
 SceGxmMemoryAttribFlags: 3
 
 Aligning memory... Doing a 256kb alignment
@@ -185,7 +185,7 @@ Mapping graphics memory
 Initializing a triangle object
 
 Checking shader program
-Program address: 0x810f0024
+Program address: 0x81100024
 sceGxmProgramCheck() result: 0x00000000
 Registering shader program with the patcher
 Allocating patcher memory
@@ -193,7 +193,7 @@ SceSize: 36
 sceGxmShaderPatcherRegisterProgram() result: 0x00000000
 
 Checking shader program
-Program address: 0x810f0130
+Program address: 0x81100130
 sceGxmProgramCheck() result: 0x00000000
 Registering shader program with the patcher
 Allocating patcher memory
@@ -201,7 +201,7 @@ SceSize: 36
 sceGxmShaderPatcherRegisterProgram() result: 0x00000000
 
 Checking shader program
-Program address: 0x810f0224
+Program address: 0x81100224
 sceGxmProgramCheck() result: 0x00000000
 Registering shader program with the patcher
 Allocating patcher memory
@@ -209,7 +209,7 @@ SceSize: 36
 sceGxmShaderPatcherRegisterProgram() result: 0x00000000
 
 Checking shader program
-Program address: 0x810f037c
+Program address: 0x8110037c
 sceGxmProgramCheck() result: 0x00000000
 Registering shader program with the patcher
 Allocating patcher memory
@@ -232,15 +232,17 @@ Vertex Program and Stream Attributes...
 Pointer the the patcher at address: 0x81200dc8
 ProgramID: 2166361784
 Program attributes at address: 0x81180ef4
-	Attribute - stream index: 0
-	Attribute - offset: 0
-	Attribute - format: 0x0000000
-	Attribute - component count: 2
 	Attribute count: 1
-Current vertex stream at address: 0x810f10fc
+	Attribute 0 - stream index: 0
+	Attribute 0 - offset: 0
+	Attribute 0 - format: 0x0000000
+	Attribute 0 - component count: 2
+	Attribute 0 - reg index: 0
+Current vertex stream at address: 0x811010fc
+Stream count: 1
+	Stream Type: 1
 	Stream Attribute - stride: 8
 	Stream Attribute - index source: 0x0000000
-Stream count: 1
 Allocating patcher memory
 SceSize: 203
 Allocating patcher memory
@@ -281,15 +283,22 @@ Vertex Program and Stream Attributes...
 Pointer the the patcher at address: 0x81200dc8
 ProgramID: 2166361896
 Program attributes at address: 0x81180ee4
-	Attribute - stream index: 0
-	Attribute - offset: 0
-	Attribute - format: 0x0000000
-	Attribute - component count: 3
 	Attribute count: 2
-Current vertex stream at address: 0x810f10fc
+	Attribute 0 - stream index: 0
+	Attribute 0 - offset: 0
+	Attribute 0 - format: 0x0000000
+	Attribute 0 - component count: 3
+	Attribute 0 - reg index: 0
+	Attribute 1 - stream index: 0
+	Attribute 1 - offset: 12
+	Attribute 1 - format: 0x0000000
+	Attribute 1 - component count: 4
+	Attribute 1 - reg index: 4
+Current vertex stream at address: 0x811010fc
+Stream count: 1
+	Stream Type: 5
 	Stream Attribute - stride: 8
 	Stream Attribute - index source: 0x0000000
-Stream count: 1
 Allocating patcher memory
 SceSize: 239
 Allocating patcher memory
@@ -315,7 +324,7 @@ Setting up clear vertices
 Setting up clear indices
 Setting up basic vertices
 Setting up basic indices
-Loading World-View-Projection parameters from vertex program at address: 0x81201170
+Loading World-View-Projection parameters from vertex program at address: 0x81100224
 
 Cleaning up after a triangle object
 
