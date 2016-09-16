@@ -741,10 +741,27 @@ void Graphics::patcherSetFragmentProgram(const SceGxmFragmentProgram* program)
 
 void Graphics::patcherSetVertexStream(unsigned int streamIndex, const void* vertices)
 {
+	//vitaPrintf("\nSetting vertex stream...\n");
 	/*
 	vitaPrintf("Setting vertex stream...\n");
 	vitaPrintf("\tStreamIndex: %u\n", streamIndex);
 	vitaPrintf("\tStream at address: %p\n", vertices);
+	*/
+	/*
+	BasicVertex *const vertexInfo = (BasicVertex *const) vertices;
+	vitaPrintf("Vertice information:\n");
+	vitaPrintf("\tVertice[0].x: %f\n", vertexInfo[0].x);
+	vitaPrintf("\tVertice[0].y: %f\n", vertexInfo[0].y);
+	vitaPrintf("\tVertice[0].z: %f\n", vertexInfo[0].z);
+	//vitaPrintf("\tVertice[0].color: %u\n", vertexInfo[0].color);
+	vitaPrintf("\tVertice[1].x: %f\n", vertexInfo[1].x);
+	vitaPrintf("\tVertice[1].y: %f\n", vertexInfo[1].y);
+	vitaPrintf("\tVertice[1].z: %f\n", vertexInfo[1].z);
+	//vitaPrintf("\tVertice[1].color: %u\n", vertexInfo[1].color);
+	vitaPrintf("\tVertice[2].x: %f\n", vertexInfo[2].x);
+	vitaPrintf("\tVertice[2].y: %f\n", vertexInfo[2].y);
+	vitaPrintf("\tVertice[2].z: %f\n", vertexInfo[2].z);
+	//vitaPrintf("\tVertice[2].color: %u\n", vertexInfo[2].color);
 	*/
 
 	sceGxmSetVertexStream(gxmContext_ptr, streamIndex, vertices);

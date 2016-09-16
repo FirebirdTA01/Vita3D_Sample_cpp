@@ -165,8 +165,8 @@ void Triangle::init()
 
 	vitaPrintf("Setting up basic vertices\n");
 	//create basic shaded triangle vetices/indice
-	basicVertices[0].x = -0.5f;
-	basicVertices[0].y = -0.5f;
+	basicVertices[0].x = 0.0f;
+	basicVertices[0].y = 0.5f;
 	basicVertices[0].z = 0.0f;
 	basicVertices[0].color = COLOR_RED;
 	basicVertices[1].x = 0.5f;
@@ -174,7 +174,7 @@ void Triangle::init()
 	basicVertices[1].z = 0.0f;
 	basicVertices[1].color = COLOR_GREEN;
 	basicVertices[2].x = -0.5f;
-	basicVertices[2].y = 0.5f;
+	basicVertices[2].y = -0.5f;
 	basicVertices[2].z = 0.0f;
 	basicVertices[2].color = COLOR_BLUE;
 
@@ -192,9 +192,9 @@ void Triangle::init()
 void Triangle::update()
 {
 	//update trianlge angle
-	triangleRotation += ((PI * 2.f) / 60.f);
-	if (triangleRotation > (PI * 2.f))
-		triangleRotation -= (PI * 2.f);
+	triangleRotation += (((float)PI * 2.f) / 60.f);
+	if (triangleRotation > ((float)PI * 2.f))
+		triangleRotation -= ((float)PI * 2.f);
 
 	//4x4 matrix for rotation
 	float aspectRatio = (float)DISPLAY_WIDTH / (float)DISPLAY_HEIGHT;
