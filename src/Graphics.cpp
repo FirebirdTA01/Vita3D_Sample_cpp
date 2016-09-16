@@ -354,7 +354,7 @@ void Graphics::initShaderPatcher(PatcherSizes* sizes)
 	vitaPrintf("\nAllocating memory for the shader patcher buffer\n");
 	patcherBuf_ptr = allocGraphicsMem(
 		SCE_KERNEL_MEMBLOCK_TYPE_USER_RW_UNCACHE,
-		(SceSize)sizes->patchBufferSize,
+		sizes->patchBufferSize,
 		4,
 		SCE_GXM_MEMORY_ATTRIB_READ | SCE_GXM_MEMORY_ATTRIB_WRITE,
 		&patcherBufUID
@@ -362,14 +362,14 @@ void Graphics::initShaderPatcher(PatcherSizes* sizes)
 
 	vitaPrintf("\nAllocating memory for patcher's vertex USSE programs\n");
 	patcherVertexUsse_ptr = allocVertexUsseMem(
-		(SceSize)sizes->patchVertexUsseSize,
+		sizes->patchVertexUsseSize,
 		&patcherVertexUsseUID,
 		&patcherVertexUsseOffset
 	);
 
 	vitaPrintf("\nAllocating memory for patcher's fragment USSE programs\n");
 	patcherFragmentUsse_ptr = allocFragmentUsseMem(
-		(SceSize)sizes->patchFragmentUsseSize,
+		sizes->patchFragmentUsseSize,
 		&patcherFragmentUsseUID,
 		&patcherFragmentUsseOffset
 	);
@@ -383,16 +383,16 @@ void Graphics::initShaderPatcher(PatcherSizes* sizes)
 	patcherParams.bufferAllocCallback = NULL;
 	patcherParams.bufferFreeCallback = NULL;
 	patcherParams.bufferMem = patcherBuf_ptr;
-	patcherParams.bufferMemSize = (SceSize)sizes->patchBufferSize;
+	patcherParams.bufferMemSize = sizes->patchBufferSize;
 	patcherParams.vertexUsseAllocCallback = NULL;
 	patcherParams.vertexUsseFreeCallback = NULL;
 	patcherParams.vertexUsseMem = patcherVertexUsse_ptr;
-	patcherParams.vertexUsseMemSize = (SceSize)sizes->patchVertexUsseSize;
+	patcherParams.vertexUsseMemSize = sizes->patchVertexUsseSize;
 	patcherParams.vertexUsseOffset = patcherVertexUsseOffset;
 	patcherParams.fragmentUsseAllocCallback = NULL;
 	patcherParams.fragmentUsseFreeCallback = NULL;
 	patcherParams.fragmentUsseMem = patcherFragmentUsse_ptr;
-	patcherParams.fragmentUsseMemSize = (SceSize)sizes->patchFragmentUsseSize;
+	patcherParams.fragmentUsseMemSize = sizes->patchFragmentUsseSize;
 	patcherParams.fragmentUsseOffset = patcherFragmentUsseOffset;
 
 	vitaPrintf("\nCreating the shader patcher\n");
