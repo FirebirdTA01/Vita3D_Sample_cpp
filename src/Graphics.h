@@ -51,6 +51,8 @@ typedef struct ClearVertex
 {
 	float x;
 	float y;
+	float z;
+	unsigned int color;
 } ClearVertex;
 //basic geometry
 typedef struct BasicVertex
